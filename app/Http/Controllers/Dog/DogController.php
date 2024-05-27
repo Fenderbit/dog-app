@@ -39,10 +39,10 @@ class DogController extends Controller
      */
     public function buy(DogBuyRequest $request): UserResource|JsonResponse
     {
-        $user = User::with('dogs')->where('id', $request->user()->id)->first();
+        $user = $request->user();
 
         if ($user->dogs->isNotEmpty()) {
-            return response()->json(['error' => 'User already have dog'], 400);
+            return response()->json(['error' => 'User already have dog.'], 400);
         }
 
         try {

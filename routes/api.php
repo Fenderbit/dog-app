@@ -18,6 +18,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/dog', [DogController::class, 'store']);
     Route::post('/dog/buy', [DogController::class, 'buy']);
     Route::post('/food', [FoodController::class, 'store']);
+    Route::post('/food/buy', [FoodController::class, 'buy']);
+
     /*TODO обновление, удаление, получение всех и одной собаки
     TODO купить еду добавление в фуд пурчэйз
     TODO создание, обновление, удаление, получение всех и одной еды

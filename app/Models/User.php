@@ -58,6 +58,6 @@ class User extends Authenticatable
 
     public function foods(): HasMany
     {
-        return $this->hasMany(Feed_purchase::class);
+        return $this->hasMany(Food_purchase::class);
     }
 }

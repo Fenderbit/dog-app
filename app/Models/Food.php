@@ -11,6 +11,7 @@ class Food extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'foods';
     protected $fillable = [
         'name',
         'price',
@@ -19,8 +20,8 @@ class Food extends Model
         'image_url',
     ];
 
-    public function feed_purchases(): HasMany
+    public function food_purchases(): HasMany
     {
-        return $this->hasMany(Feed_purchase::class);
+        return $this->hasMany(Food_purchase::class);
     }
 }

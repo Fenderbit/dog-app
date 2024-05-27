@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Feed_purchase extends Model
+class Food_purchase extends Model
 {
     use HasFactory, SoftDeletes;
 

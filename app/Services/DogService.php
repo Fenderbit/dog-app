@@ -53,7 +53,6 @@ class DogService
                 'hunger_level' => $dog->hunger_level,
                 'image_url' => $dog->image_url,
                 'price' => $dog->price,
-                'last_feeding_time' => $dog->last_feeding_time,
             ]);
         });
     }
