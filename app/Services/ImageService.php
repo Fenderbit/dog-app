@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use App\Http\Requests\DogRequest;
 use Exception;
-use Illuminate\Support\Facades\Storage;
+use http\Client\Request;
 
 class ImageService
 {
     /**
      * @throws Exception
      */
-    public function store(DogRequest $request, $path = 'images'): string
+    public function store($request, $path = 'images'): string
     {
         $image = $request->file('image_url');
 

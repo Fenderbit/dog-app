@@ -8,7 +8,6 @@ use App\Models\Dog;
 use App\Models\UserDog;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class DogService
 {
@@ -35,10 +34,16 @@ class DogService
         });
     }
 
+    /**
+     * @throws Exception
+     */
     public function createUserDog(DogBuyRequest $request)
     {
         $dog = Dog::where('id', $request->dog_id)->first();
 
+        if ($request->user()->balance < $dog->price) {
+            throw new Exception("Insufficient balance", 400);
+        }
         return DB::transaction(function () use ($dog, $request) {
             return UserDog::create([
                 'user_id' => $request->user()->id,

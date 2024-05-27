@@ -34,6 +34,9 @@ class DogController extends Controller
         return new DogResource($dog);
     }
 
+    /**
+     * @throws Exception
+     */
     public function buy(DogBuyRequest $request): UserResource|JsonResponse
     {
         $user = User::with('dogs')->where('id', $request->user()->id)->first();
@@ -42,7 +45,14 @@ class DogController extends Controller
             return response()->json(['error' => 'User already have dog'], 400);
         }
 
-        $userDog = $this->service->createUserDog($request);
+        try {
+            $userDog = $this->service->createUserDog($request);
+            $user->balance -= $userDog->price;
+            $user->save();
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode());
+        }
+
         $userDogInfo = new UserDogResource($userDog);
 
         return (new UserResource($user))->additional(['dog' => $userDogInfo]);
