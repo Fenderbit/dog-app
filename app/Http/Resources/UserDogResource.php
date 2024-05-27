@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DogResource extends JsonResource
+class UserDogResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,14 @@ class DogResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'dog_id' => $this->dog_id,
             'name' => $this->name,
             'health_level' => $this->health_level,
             'hunger_level' => $this->hunger_level,
             'image_url' => $this->image_url,
             'price' => $this->price,
+            'last_feeding_time' => $this->last_feeding_time,
         ];
     }
 }
