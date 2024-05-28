@@ -23,8 +23,8 @@ class DogRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'health_level' => ['required', 'numeric', 'between:0,4'],
-            'hunger_level' => ['required', 'numeric', 'between:0,4'],
+            'health_level' => ['nullable', 'numeric', 'between:0,4'],
+            'hunger_level' => ['nullable', 'numeric', 'between:0,4'],
             'image_url' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'price' => ['required', 'numeric', 'min:0'],
         ];

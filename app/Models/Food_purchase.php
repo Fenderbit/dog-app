@@ -19,6 +19,9 @@ class Food_purchase extends Model
         'is_consumed',
     ];
 
+    protected $casts = [
+        'purchased_at' => 'datetime',
+    ];
 
     protected function serializeDate(DateTimeInterface $date): string
     {

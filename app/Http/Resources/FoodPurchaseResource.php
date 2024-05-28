@@ -19,7 +19,7 @@ class FoodPurchaseResource extends JsonResource
             'user_id' => $this->user_id,
             'food_id' => $this->food_id,
             'purchased_at' => $this->purchased_at->format('Y-m-d H:i:s'),
-            'is_consumed' => $this->is_consumed,
+            'is_consumed' => false,
         ];
     }
 }

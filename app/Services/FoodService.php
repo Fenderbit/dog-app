@@ -34,7 +34,13 @@ class FoodService
         $validatedData['income_price'] = 1 + ($validatedData['income_price'] / 100);
 
         return DB::transaction(function () use ($validatedData) {
-            return Food::create($validatedData);
+            return Food::create([
+                'name' => $validatedData['name'],
+                'price' => $validatedData['price'],
+                'income_price' => $validatedData['income_price'],
+                'duration_hours' => $validatedData['duration_hours'],
+                'image_url' => $validatedData['image_url']
+            ]);
         });
     }
 
@@ -63,7 +69,7 @@ class FoodService
     {
         $food = Food::where('id', $request->food_id)->first();
 
-        if($food){
+        if ($food) {
             if ($request->user()->balance < $food->price) {
                 throw new InsufficientBalanceException("Insufficient balance");
             }
@@ -74,7 +80,7 @@ class FoodService
                     'purchased_at' => Carbon::now('Asia/Aqtobe'),
                 ]);
             });
-        }else{
+        } else {
             throw new Exception('There is no such food');
         }
 

@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <form action="{{ route('admin.dog.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.dogs.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="name">Name</label>

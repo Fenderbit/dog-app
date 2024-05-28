@@ -71,6 +71,7 @@
     </table>
 
     <h3>Food Purchases</h3>
+    <a href="{{ route('admin.users.createFood', $user->id) }}" class="btn btn-success mb-3">Add Food Purchase</a>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -85,6 +86,7 @@
                 <td>{{ $purchase->food->name }}</td>
                 <td>{{ $purchase->purchased_at }}</td>
                 <td>
+                    <a href="{{ route('admin.users.editFood', [$user->id, $purchase->id]) }}" class="btn btn-primary">Edit</a>
                     <form action="{{ route('admin.users.deleteFood', [$user->id, $purchase->id]) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')

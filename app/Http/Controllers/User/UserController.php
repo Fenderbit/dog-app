@@ -94,9 +94,22 @@ class UserController extends Controller
         return redirect()->route('admin.users.show', $user)->with('success', 'Dog deleted successfully');
     }
 
+    public function createFood(User $user): View
+    {
+        return view('admin.users.create_food', compact('user'));
+    }
+
+    public function editFood(User $user, Food_purchase $food): View
+    {
+        return view('admin.users.edit_food', compact('user', 'food'));
+    }
+
     public function addFood(Request $request, User $user): RedirectResponse
     {
-        $user->foods()->create($request->all());
+        $data = $request->all();
+        $data['is_consumed'] = $request->has('is_consumed') ? 1 : 0;
+
+        $user->foods()->create($data);
         return redirect()->route('admin.users.show', $user)->with('success', 'Food added successfully');
     }
 
