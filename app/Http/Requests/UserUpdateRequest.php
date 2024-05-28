@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DogRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,11 @@ class DogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'health_level' => ['required', 'numeric', 'between:0,4'],
-            'hunger_level' => ['required', 'numeric', 'between:0,4'],
-            'image_url' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'username' => ['nullable', 'string', 'max:255'],
+            'image_url' => ['nullable', 'url', 'max:255'],
+            'balance' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

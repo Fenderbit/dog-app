@@ -16,9 +16,9 @@ class ImageService
 
         $imageName = time() . '.' . $image->extension();
 
-        $image->storeAs('public/' . $path, $imageName);
+        $image->storeAs($path, $imageName);
 
-        return 'storage/public/' . $path . '/' . $imageName;
+        return $path . '/' . $imageName;
     }
 
 }

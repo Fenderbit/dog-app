@@ -22,7 +22,7 @@ class UserDogResource extends JsonResource
             'hunger_level' => $this->hunger_level,
             'image_url' => $this->image_url,
             'price' => $this->price,
-            'last_feeding_time' => $this->last_feeding_time,
+            'last_feeding_time' => is_null($this->last_feeding_time) ? null : $this->last_feeding_time->format('Y-m-d H:i:s'),
         ];
     }
 }

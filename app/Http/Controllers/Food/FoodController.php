@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Food;
 
+use App\Exceptions\InsufficientBalanceException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FoodBuyRequest;
 use App\Http\Requests\FoodRequest;
 use App\Http\Resources\FoodPurchaseResource;
 use App\Http\Resources\FoodResource;
 use App\Http\Resources\UserResource;
+use App\Models\Food;
 use App\Models\Food_purchase;
+use App\Models\UserDog;
 use App\Services\FoodService;
 use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class FoodController extends Controller
 {
@@ -25,11 +30,41 @@ class FoodController extends Controller
     /**
      * @throws Exception
      */
-    public function store(FoodRequest $request): FoodResource
+    public function store(FoodRequest $request): RedirectResponse
     {
-        $food = $this->service->create($request);
+        $this->service->create($request);
 
-        return new FoodResource($food);
+        session()->flash('success', 'Food created successfully!');
+
+        return redirect()->route('admin.add-food');
+    }
+
+    public function index(): View
+    {
+        $foods = Food::all();
+        return view('admin.foods.index', compact('foods'));
+    }
+
+    public function edit(Food $food): View
+    {
+        return view('admin.foods.edit', compact('food'));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(FoodRequest $request, Food $food): RedirectResponse
+    {
+        $this->service->update($request, $food);
+        session()->flash('success', 'Food updated successfully!');
+        return redirect()->route('admin.foods.index');
+    }
+
+    public function destroy(Food $food): RedirectResponse
+    {
+        $food->delete();
+        session()->flash('success', 'Food deleted successfully!');
+        return redirect()->route('admin.foods.index');
     }
 
     public function buy(FoodBuyRequest $request): UserResource|JsonResponse
@@ -45,10 +80,16 @@ class FoodController extends Controller
         }
         try {
             $food_purchase = $this->service->createFoodPurchase($request);
+            $dog = UserDog::where('user_id', $user->id)->first();
+            $dog->health_level += 1;
+            $dog->hunger_level += 1;
+            $dog->save();
             $user->balance -= $food_purchase->food->price;
             $user->save();
+        } catch (InsufficientBalanceException $e) {
+            return $e->render($request);
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
         $food_purchaseInfo = new FoodPurchaseResource($food_purchase);

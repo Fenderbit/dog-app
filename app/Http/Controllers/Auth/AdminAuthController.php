@@ -3,14 +3,27 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AdminAuthController extends Controller
 {
-    public function showLoginForm()
+
+    public function dashboard(): View
+    {
+        $totalUsers = User::count();
+        $totalBalance = User::sum('balance');
+        $usersPerDay = User::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+            ->groupBy('date')
+            ->get();
+
+        return view('admin.dashboard', compact('totalUsers', 'totalBalance', 'usersPerDay'));
+    }
+    public function showLoginForm(): View
     {
         return view('admin.login');
     }
