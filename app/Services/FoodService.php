@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\InsufficientBalanceException;
 use App\Http\Requests\FoodBuyRequest;
 use App\Http\Requests\FoodRequest;
+use App\Http\Requests\FoodUpdateRequest;
 use App\Models\Food;
 use App\Models\Food_purchase;
 use Carbon\Carbon;
@@ -47,17 +48,20 @@ class FoodService
     /**
      * @throws Exception
      */
-    public function update(FoodRequest $request, Food $food)
+    public function update(FoodUpdateRequest $request, Food $food)
     {
         $validatedData = $request->validated();
+        if(isset($validatedData['image_url'])){
+            Storage::delete($food->image_url);
+            $profilePicturePath = $this->service->store($request, 'foods');
 
-        $profilePicturePath = $this->service->store($request, 'foods');
-        Storage::delete($food->image_url);
 
-        $validatedData['image_url'] = $profilePicturePath;
+            $validatedData['image_url'] = $profilePicturePath;
+        }
 
-        return DB::transaction(function () use ($request, $food) {
-            return $food->update($request->all());
+
+        return DB::transaction(function () use ($validatedData, $food) {
+            return $food->update($validatedData);
         });
     }
 

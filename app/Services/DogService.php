@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\InsufficientBalanceException;
 use App\Http\Requests\DogBuyRequest;
 use App\Http\Requests\DogRequest;
+use App\Http\Requests\DogUpdateRequest;
 use App\Models\Dog;
 use App\Models\UserDog;
 use Exception;
@@ -45,17 +46,20 @@ class DogService
     /**
      * @throws Exception
      */
-    public function update(DogRequest $request, Dog $dog)
+    public function update(DogUpdateRequest $request, Dog $dog)
     {
         $validatedData = $request->validated();
 
-        $profilePicturePath = $this->service->store($request, 'dogs');
-        Storage::delete($dog->image_url);
+        if(isset($validatedData['image_url'])){
+            Storage::delete($dog->image_url);
+            $profilePicturePath = $this->service->store($request, 'dogs');
 
-        $validatedData['image_url'] = $profilePicturePath;
+            $validatedData['image_url'] = $profilePicturePath;
+        }
 
-        return DB::transaction(function () use ($request, $dog) {
-            return $dog->update($request->all());
+
+        return DB::transaction(function () use ($validatedData, $dog) {
+            return $dog->update($validatedData);
         });
     }
 

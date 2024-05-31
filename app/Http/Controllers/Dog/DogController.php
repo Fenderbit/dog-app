@@ -6,6 +6,7 @@ use App\Exceptions\InsufficientBalanceException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DogBuyRequest;
 use App\Http\Requests\DogRequest;
+use App\Http\Requests\DogUpdateRequest;
 use App\Http\Resources\UserDogResource;
 use App\Http\Resources\UserResource;
 use App\Models\Dog;
@@ -14,6 +15,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class DogController extends Controller
 {
@@ -50,7 +52,7 @@ class DogController extends Controller
     /**
      * @throws Exception
      */
-    public function update(DogRequest $request, Dog $dog): RedirectResponse
+    public function update(DogUpdateRequest $request, Dog $dog): RedirectResponse
     {
         $this->service->update($request, $dog);
         session()->flash('success', 'Dog updated successfully!');
@@ -59,6 +61,7 @@ class DogController extends Controller
 
     public function destroy(Dog $dog): RedirectResponse
     {
+        Storage::delete($dog->image_url);
         $dog->delete();
         session()->flash('success', 'Dog deleted successfully!');
         return redirect()->route('admin.dogs.index');

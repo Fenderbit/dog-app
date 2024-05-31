@@ -27,7 +27,7 @@
             <input type="number" name="price" class="form-control" value="{{ $food->price }}" required step="0.01" min="0">
         </div>
         <div class="form-group">
-            <label for="income_price">Income Price</label>
+            <label for="income_price">Income Price (%)</label>
             <input type="number" name="income_price" class="form-control" value="{{ $food->income_price }}" required step="0.01" min="0">
         </div>
         <button type="submit" class="btn btn-primary">Update Food</button>

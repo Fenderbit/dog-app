@@ -6,6 +6,7 @@ use App\Exceptions\InsufficientBalanceException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FoodBuyRequest;
 use App\Http\Requests\FoodRequest;
+use App\Http\Requests\FoodUpdateRequest;
 use App\Http\Resources\FoodPurchaseResource;
 use App\Http\Resources\FoodResource;
 use App\Http\Resources\UserResource;
@@ -17,6 +18,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class FoodController extends Controller
 {
@@ -53,7 +55,7 @@ class FoodController extends Controller
     /**
      * @throws Exception
      */
-    public function update(FoodRequest $request, Food $food): RedirectResponse
+    public function update(FoodUpdateRequest $request, Food $food): RedirectResponse
     {
         $this->service->update($request, $food);
         session()->flash('success', 'Food updated successfully!');
@@ -62,6 +64,7 @@ class FoodController extends Controller
 
     public function destroy(Food $food): RedirectResponse
     {
+        Storage::delete($food->image_url);
         $food->delete();
         session()->flash('success', 'Food deleted successfully!');
         return redirect()->route('admin.foods.index');
