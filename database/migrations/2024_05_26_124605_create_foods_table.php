@@ -19,7 +19,6 @@ return new class extends Migration
             $table->decimal('income_price')->nullable();
             $table->integer('duration_hours');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

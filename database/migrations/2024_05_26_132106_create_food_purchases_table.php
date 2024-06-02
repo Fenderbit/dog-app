@@ -18,7 +18,6 @@ return new class extends Migration
             $table->timestamp('purchased_at');
             $table->boolean('is_consumed')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

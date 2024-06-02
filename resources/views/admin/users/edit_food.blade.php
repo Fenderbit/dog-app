@@ -12,7 +12,7 @@
         @method('PUT')
         <div class="form-group">
             <label for="food_id">Food ID</label>
-            <input type="text" name="food_id" class="form-control" value="{{ $food->food_id }}" required>
+            <input type="text" name="food_id" class="form-control" value="{{ $food->food_id ?? '' }}" required>
         </div>
         <div class="form-group">
             <label for="purchased_at">Purchased At</label>

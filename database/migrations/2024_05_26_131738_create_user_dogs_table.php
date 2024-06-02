@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('price')->nullable();
             $table->timestamp('last_feeding_time')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
