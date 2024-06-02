@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Exception;
-use http\Client\Request;
 
 class ImageService
 {
