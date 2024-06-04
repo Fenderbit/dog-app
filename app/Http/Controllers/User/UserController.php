@@ -36,10 +36,11 @@ class UserController extends Controller
 
         $userDog = UserDog::where('user_id', $user->id)->first();
 
-        $userDogInfo = new UserDogResource($userDog);
+        $userDogInfo = $userDog ? new UserDogResource($userDog) : null;
 
         return (new UserResource($user))->additional(['dog' => $userDogInfo]);
     }
+
 
     public function index(): View
     {
