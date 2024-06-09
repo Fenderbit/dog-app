@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserDogResource;
 use App\Http\Resources\UserResource;
+use App\Models\Food;
 use App\Models\Food_purchase;
 use App\Models\User;
 use App\Models\UserDog;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -107,12 +111,59 @@ class UserController extends Controller
 
     public function addFood(Request $request, User $user): RedirectResponse
     {
-        $data = $request->all();
-        $data['is_consumed'] = $request->has('is_consumed') ? 1 : 0;
+        // Check if the user has a dog
+        $dog = UserDog::where('user_id', $user->id)->first();
+        if (is_null($dog)) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'The user does not have a dog.');
+        }
 
-        $user->foods()->create($data);
+        // Check if the user already bought this food and has not consumed it yet
+        $food = Food_purchase::where('user_id', $user->id)
+            ->where('food_id', $request->food_id)
+            ->where('is_consumed', false)
+            ->first();
+
+        if (!is_null($food)) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'The user already bought this food.');
+        }
+
+        // Check if the user has sufficient balance
+        $food = Food::where('id', $request->food_id)->first();
+        if (!$food) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'Invalid food ID.');
+        }
+
+        if ($user->balance < $food->price) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'Insufficient balance.');
+        }
+
+        // Create the food purchase transaction
+        try {
+            DB::transaction(function () use ($request, $user, $food) {
+                $food_purchase = Food_purchase::create([
+                    'user_id' => $user->id,
+                    'food_id' => $request->food_id,
+                    'purchased_at' => Carbon::now('Asia/Aqtobe'),
+                ]);
+
+                // Update user's balance and dog's health and hunger levels
+                $user->balance -= $food->price;
+                $user->save();
+
+                $dog = UserDog::where('user_id', $user->id)->first();
+                $dog->health_level += 1;
+                $dog->hunger_level += 1;
+                $dog->save();
+
+                return $food_purchase;
+            });
+        } catch (Exception $e) {
+            return redirect()->route('admin.users.show', $user)->with('error', $e->getMessage());
+        }
+
         return redirect()->route('admin.users.show', $user)->with('success', 'Food added successfully');
     }
+
 
     public function updateFood(Request $request, User $user, Food_purchase $food): RedirectResponse
     {

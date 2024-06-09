@@ -13,14 +13,6 @@
             <label for="food_id">Food ID</label>
             <input type="text" name="food_id" class="form-control" required>
         </div>
-        <div class="form-group">
-            <label for="purchased_at">Purchased At</label>
-            <input type="datetime-local" name="purchased_at" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="is_consumed">Is Consumed</label>
-            <input type="checkbox" name="is_consumed">
-        </div>
         <button type="submit" class="btn btn-primary">Add Food Purchase</button>
     </form>
 @stop

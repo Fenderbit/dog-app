@@ -17,6 +17,16 @@
         </script>
     @endif
 
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('error') }}',
+            });
+        </script>
+    @endif
+
     <h3>Details</h3>
     <table class="table table-bordered">
         <tr>
@@ -84,9 +94,8 @@
         @foreach($foodPurchases as $purchase)
             <tr>
                 <td>{{ $purchase->food->name ?? '' }}</td>
-                <td>{{ $purchase->purchased_at ?? ''}}</td>
+                <td>{{ $purchase->purchased_at ?? '' }}</td>
                 <td>
-                    <a href="{{ route('admin.users.editFood', [$user->id, $purchase->id]) }}" class="btn btn-primary">Edit</a>
                     <form action="{{ route('admin.users.deleteFood', [$user->id, $purchase->id]) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
