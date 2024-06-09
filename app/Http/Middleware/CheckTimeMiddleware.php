@@ -23,7 +23,7 @@ class CheckTimeMiddleware
 
         foreach ($foods as $food) {
             if(!is_null($food->food)){
-                $expirationTime = Carbon::parse($food->purchased_at)->addHours($food->food->duration_hours);
+                $expirationTime = Carbon::parse($food->purchased_at)->addMinutes($food->food->duration_hours);
 
                 if (Carbon::now()->greaterThan($expirationTime)) {
                     $dog = UserDog::where('user_id', $user->id)->first();

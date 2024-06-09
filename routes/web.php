@@ -5,6 +5,7 @@ use App\Http\Controllers\Dog\DogController;
 use App\Http\Controllers\Food\FoodController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckTimeMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,7 +17,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('login', [AdminAuthController::class, 'login'])->name('login.submit');
 
-        Route::middleware([AdminMiddleware::class])->group(function () {
+        Route::middleware([AdminMiddleware::class, CheckTimeMiddleware::class])->group(function () {
 
             Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('dashboard');
 
