@@ -36,6 +36,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/users/{user}/dogs/{dog}', [UserController::class, 'updateDog'])->name('users.updateDog');
         Route::delete('/users/{user}/dogs/{dog}', [UserController::class, 'deleteDog'])->name('users.deleteDog');
 
+
         // Food Purchases Management for Users
         Route::get('/users/{user}/foods/create', [UserController::class, 'createFood'])->name('users.createFood');
         Route::post('/users/{user}/foods', [UserController::class, 'addFood'])->name('users.addFood');

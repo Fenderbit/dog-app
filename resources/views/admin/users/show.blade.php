@@ -52,7 +52,14 @@
     </table>
 
     <h3>Dogs</h3>
-    <a href="{{ route('admin.users.addDog', $user->id) }}" class="btn btn-success mb-3">Add Dog</a>
+    <form action="{{ route('users.addDog', $user->id) }}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="dog_id">Dog ID</label>
+            <input type="text" name="dog_id" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success mb-3">Add Dog</button>
+    </form>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -69,8 +76,8 @@
                 <td>{{ $dog->health_level }}</td>
                 <td>{{ $dog->hunger_level }}</td>
                 <td>
-                    <a href="{{ route('admin.editDog', [$user->id, $dog->id]) }}" class="btn btn-primary">Edit</a>
-                    <form action="{{ route('admin.users.deleteDog', [$user->id, $dog->id]) }}" method="POST" style="display:inline-block;">
+                    <a href="{{ route('editDog', [$user->id, $dog->id]) }}" class="btn btn-primary">Edit</a>
+                    <form action="{{ route('users.deleteDog', [$user->id, $dog->id]) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
