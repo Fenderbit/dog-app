@@ -73,6 +73,10 @@ class FoodController extends Controller
     public function buy(FoodBuyRequest $request): UserResource|JsonResponse
     {
         $user = $request->user();
+        $dog = UserDog::where('user_id', $user->id)->first();
+        if(is_null($dog)){
+            return response()->json(['error' => 'You dont have dog'], 400);
+        }
         $food = Food_purchase::where('user_id', $user->id)
             ->where('food_id', $request->food_id)
             ->where('is_consumed', false)
@@ -83,7 +87,6 @@ class FoodController extends Controller
         }
         try {
             $food_purchase = $this->service->createFoodPurchase($request);
-            $dog = UserDog::where('user_id', $user->id)->first();
             $dog->health_level += 1;
             $dog->hunger_level += 1;
             $dog->save();
