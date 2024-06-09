@@ -7,6 +7,7 @@ use App\Models\UserDog;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckTimeMiddleware
@@ -18,7 +19,7 @@ class CheckTimeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
+        $user = Auth::user();
         $foods = Food_purchase::where('user_id', $user->id)->where('is_consumed', false)->get();
 
         foreach ($foods as $food) {

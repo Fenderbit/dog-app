@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserDogResource;
 use App\Http\Resources\UserResource;
+use App\Models\Dog;
 use App\Models\Food;
 use App\Models\Food_purchase;
 use App\Models\User;
@@ -78,9 +79,42 @@ class UserController extends Controller
 
     public function addDog(Request $request, User $user): RedirectResponse
     {
-        $user->dogs()->create($request->all());
-        return redirect()->route('admin.users.show', $user)->with('success', 'Dog added successfully');
+        // Check if the user already has a dog
+        if ($user->dogs->isNotEmpty()) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'User already has a dog.');
+        }
+
+        $dog = Dog::find($request->dog_id);
+        if (!$dog) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'Invalid dog ID.');
+        }
+
+        if ($user->balance < $dog->price) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'Insufficient balance.');
+        }
+
+        try {
+            DB::transaction(function () use ($user, $dog) {
+                $userDog = UserDog::create([
+                    'user_id' => $user->id,
+                    'dog_id' => $dog->id,
+                    'name' => $dog->name,
+                    'health_level' => $dog->health_level,
+                    'hunger_level' => $dog->hunger_level,
+                    'image_url' => $dog->image_url,
+                    'price' => $dog->price,
+                ]);
+
+                $user->balance -= $userDog->price;
+                $user->save();
+            });
+
+            return redirect()->route('admin.users.show', $user)->with('success', 'Dog added successfully');
+        } catch (Exception $e) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'An error occurred: ' . $e->getMessage());
+        }
     }
+
 
     public function editDog(User $user, UserDog $dog)
     {

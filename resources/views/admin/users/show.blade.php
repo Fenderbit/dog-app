@@ -52,6 +52,7 @@
     </table>
 
     <h3>Dogs</h3>
+    <a href="{{ route('admin.users.addDog', $user->id) }}" class="btn btn-success mb-3">Add Dog</a>
     <table class="table table-bordered">
         <thead>
         <tr>
