@@ -20,6 +20,7 @@
     <table class="table table-bordered">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Health Level</th>
             <th>Hunger Level</th>
@@ -31,6 +32,7 @@
         <tbody>
         @foreach($dogs as $dog)
             <tr>
+                <td>{{ $dog->id }}</td>
                 <td>{{ $dog->name }}</td>
                 <td>{{ $dog->health_level }}</td>
                 <td>{{ $dog->hunger_level }}</td>

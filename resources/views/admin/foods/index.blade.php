@@ -20,6 +20,7 @@
     <table class="table table-bordered">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Duration (Hours)</th>
             <th>Image</th>
@@ -31,6 +32,7 @@
         <tbody>
         @foreach($foods as $food)
             <tr>
+                <td>{{ $food->id }}</td>
                 <td>{{ $food->name }}</td>
                 <td>{{ $food->duration_hours }}</td>
                 <td><img src="{{ asset('storage/' . $food->image_url) }}" alt="{{ $food->name }}" width="50"></td>
